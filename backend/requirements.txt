@@ -1,0 +1,41 @@
+# FastAPI Backend
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.12
+python-dotenv==1.0.1
+pydantic==2.9.2
+pydantic-settings==2.6.0
+
+# Database
+sqlalchemy==2.0.36
+asyncpg==0.30.0
+alembic==1.14.0
+
+# ML & Computer Vision
+ultralytics==8.3.41
+opencv-python==4.10.0.84
+opencv-contrib-python==4.10.0.84
+torch==2.5.1
+torchvision==0.20.1
+numpy==1.26.4
+pillow==11.0.0
+
+# Tracking
+filterpy==1.4.5
+scipy==1.14.1
+lap==0.5.10
+
+# Geometry & Math
+shapely==2.0.6
+
+# WebSocket
+websockets==14.1
+
+# HTTP Client
+httpx==0.27.2
+aiohttp==3.11.7
+
+# Utils
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dateutil==2.9.0.post0
