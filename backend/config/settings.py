@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/parking_db"
     
     # ML Models
-    YOLO_MODEL_PATH: str = "yolov11n-seg.pt"  # or yolov11s-seg.pt, yolov11m-seg.pt
+    YOLO_MODEL_PATH: str = "yolov8n-seg.pt"  # or yolov11s-seg.pt, yolov11m-seg.pt
     YOLO_CONFIDENCE_THRESHOLD: float = 0.5
     YOLO_IOU_THRESHOLD: float = 0.45
     YOLO_DEVICE: str = "cuda"  # or "cpu"

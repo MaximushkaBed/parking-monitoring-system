@@ -30,14 +30,14 @@ def test_detection():
     
     # Create detector (will download model on first run)
     detector = VehicleDetector(
-        model_path="yolov11n-seg.pt",
-        confidence_threshold=0.5,
+        model_path="yolov8n-seg.pt",
+        confidence_threshold=0.1,
         device="cpu"  # Change to "cuda" if GPU available
     )
     
     # Create test image (parking lot scene)
     # In production, use real image: frame = cv2.imread("parking_lot.jpg")
-    frame = cv2.imread("test_image.jpg") if Path("test_image.jpg").exists() else None
+    frame = cv2.imread("test_image.png") if Path("test_image.png").exists() else None
     
     if frame is None:
         logger.warning("No test image found, creating blank frame")
@@ -65,7 +65,7 @@ def test_tracking():
     logger.info("TEST 2: Vehicle Tracking")
     logger.info("=" * 60)
     
-    detector = VehicleDetector(model_path="yolov11n-seg.pt", device="cpu")
+    detector = VehicleDetector(model_path="yolov8n-seg.pt", device="cpu")
     tracker = ByteTracker(max_age=30, min_hits=3, iou_threshold=0.3)
     
     # Simulate multiple frames
@@ -130,7 +130,6 @@ def test_occupancy():
     
     manager = ParkingMonitorManager()
     
-    # Define parking places (polygons)
     place1_polygon = [(100, 100), (200, 100), (200, 200), (100, 200)]
     place2_polygon = [(250, 100), (350, 100), (350, 200), (250, 200)]
     
@@ -139,31 +138,31 @@ def test_occupancy():
     
     logger.info("Added 2 parking places")
     
-    # Simulate detections over time
+    # --- ИСПРАВЛЕННАЯ СИМУЛЯЦИЯ ---
     scenarios = [
-        # Frame 1-5: Car in place 1
-        ([{'centroid': [150, 150], 'track_id': 1, 'class_name': 'car', 'confidence': 0.95}] * 5, "Car enters place 1"),
-        # Frame 6-10: Car moves to place 2
-        ([{'centroid': [300, 150], 'track_id': 1, 'class_name': 'car', 'confidence': 0.95}] * 5, "Car moves to place 2"),
-        # Frame 11-15: No cars
-        ([] * 5, "All places empty"),
+        # 5 кадров с машиной в первом месте
+        (5, [{'centroid': [150, 150], 'track_id': 1, 'class_name': 'car', 'confidence': 0.95}], "Car enters place 1"),
+        # 5 кадров с машиной во втором месте
+        (5, [{'centroid': [300, 150], 'track_id': 1, 'class_name': 'car', 'confidence': 0.95}], "Car moves to place 2"),
+        # 5 кадров без машин
+        (5, [], "All places empty"),
     ]
     
-    frame_num = 0
-    for detections_list, description in scenarios:
+    for num_frames, detections, description in scenarios:
         logger.info(f"\n  Scenario: {description}")
-        for detections in [detections_list] if not isinstance(detections_list, list) else [detections_list]:
-            frame_num += 1
+        for _ in range(num_frames):
+            # Имитируем один кадр
+            time.sleep(0.01) # Небольшая пауза для имитации времени между кадрами
             events = manager.update_all(detections)
             
             if events:
                 for event in events:
-                    if 'end_time' in event:
-                        logger.info(f"    ✓ Place {event['place_id']} freed (duration: {event['duration_seconds']}s)")
+                    if event.get('end_time'):
+                        duration = event.get('duration_seconds', 0)
+                        logger.info(f"    ✓ Place {event['place_id']} freed (duration: {duration:.1f}s)")
                     else:
                         logger.info(f"    ✓ Place {event['place_id']} occupied by track {event['track_id']}")
-    
-    # Summary
+
     summary = manager.get_occupancy_summary()
     logger.info(f"\n  Final summary:")
     logger.info(f"    Total places: {summary['total']}")
@@ -179,7 +178,7 @@ def test_full_pipeline():
     logger.info("=" * 60)
     
     # Initialize components
-    detector = VehicleDetector(model_path="yolov11n-seg.pt", device="cpu")
+    detector = VehicleDetector(model_path="yolov8n-seg.pt", device="cpu")
     tracker = ByteTracker()
     calibrator = HomographyCalibrator()
     manager = ParkingMonitorManager()

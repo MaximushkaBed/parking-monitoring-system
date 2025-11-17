@@ -1,4 +1,7 @@
+import base64
+import cv2
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Optional, List
 import logging
@@ -154,3 +157,32 @@ async def get_camera_stats(camera_id: int, request: Request):
         raise HTTPException(status_code=404, detail="Camera not found")
     
     return camera.get_stats()
+
+@router.get("/{camera_id}/frame")
+async def get_camera_frame(camera_id: int, request: Request):
+    """Get the latest frame from a camera"""
+    camera_manager = request.app.state.camera_manager
+    camera = camera_manager.get_camera(camera_id)
+    
+    if not camera:
+        raise HTTPException(status_code=404, detail="Camera not found")
+    
+    # 1. Используем правильный метод get_frame()
+    frame_data = camera.get_frame(timeout=1.0)
+    
+    if frame_data is None:
+        raise HTTPException(status_code=404, detail="Frame not available from camera queue")
+    
+    # 2. Извлекаем кадр (первый элемент кортежа)
+    frame = frame_data[0]
+    
+    # 3. Кодируем кадр в JPEG
+    success, buffer = cv2.imencode('.jpg', frame)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to encode frame to JPEG")
+    
+    # 4. Кодируем в Base64 и преобразуем в строку для JSON
+    frame_base64 = base64.b64encode(buffer).decode('utf-8')
+    
+    # 5. Возвращаем JSON, как ожидает фронтенд
+    return JSONResponse(content={"frame": frame_base64})

@@ -75,7 +75,7 @@ async function refreshCamerasList() {
     
     try {
         const cameras = await api.getCameras();
-        
+
         if (cameras.length === 0) {
             container.innerHTML = '<p>Камеры не добавлены</p>';
             return;

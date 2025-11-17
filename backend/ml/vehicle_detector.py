@@ -14,7 +14,7 @@ class VehicleDetector:
     
     def __init__(
         self,
-        model_path: str = "yolov11n-seg.pt",
+        model_path: str = "yolov8n-seg.pt",
         confidence_threshold: float = 0.5,
         iou_threshold: float = 0.45,
         device: str = "cuda",

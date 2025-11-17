@@ -12,7 +12,7 @@ asyncpg==0.30.0
 alembic==1.14.0
 
 # ML & Computer Vision
-ultralytics==8.3.41
+ultralytics>=8.0.0,<8.3.0
 opencv-python==4.10.0.84
 opencv-contrib-python==4.10.0.84
 torch==2.5.1
@@ -23,7 +23,7 @@ pillow==11.0.0
 # Tracking
 filterpy==1.4.5
 scipy==1.14.1
-lap==0.5.10
+lap==0.5.12
 
 # Geometry & Math
 shapely==2.0.6

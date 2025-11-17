@@ -32,8 +32,10 @@ class API {
 
     // Cameras
     async getCameras() {
-        return this.request('/cameras');
+        const responseData = await this.request('/cameras/'); 
+        return responseData.cameras; 
     }
+
 
     async getCamera(id) {
         return this.request(`/cameras/${id}`);
@@ -69,11 +71,11 @@ class API {
 
     // Calibration
     async calibrateCamera(id, data) {
-        return this.request(`/calibration/${id}`, {
-            method: 'POST',
-            body: JSON.stringify(data)
-        });
-    }
+    return this.request(`/calibration/${id}/calibrate`, {
+        method: 'POST',
+        body: JSON.stringify(data)
+    });
+}
 
     async getCalibration(id) {
         return this.request(`/calibration/${id}`);
@@ -82,7 +84,12 @@ class API {
     // Parking Places
     async getParkingPlaces(cameraId = null) {
         const query = cameraId ? `?camera_id=${cameraId}` : '';
-        return this.request(`/parking-places${query}`);
+        
+        // 1. Добавляем слэш в конце пути, чтобы избежать редиректа
+        const responseData = await this.request(`/parking-places/${query}`);
+        
+        // 2. Извлекаем массив 'parking_places' из объекта ответа
+        return responseData.parking_places;
     }
 
     async createParkingPlace(data) {

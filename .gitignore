@@ -1,0 +1,65 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.so
+*.orig
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+.env/
+
+# --- IDE ---
+.vscode/
+.idea/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Cache ---
+.cache/
+*.cache
+*.pickle
+*.pkl
+*.joblib
+
+# --- ML / Data ---
+data/
+datasets/
+models/
+checkpoints/
+experiments/
+runs/
+outputs/
+*.h5
+*.hdf5
+*.ckpt
+*.pt
+*.pth
+*.onnx
+
+# --- Images / Videos ---
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
+*.mp4
+*.avi
+
+# --- System ---
+.DS_Store
+Thumbs.db
+
+# --- Build ---
+build/
+dist/
+*.egg-info/
